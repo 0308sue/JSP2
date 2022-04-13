@@ -4,13 +4,10 @@
     pageEncoding="UTF-8"%>
 <% 
 request.setCharacterEncoding("utf-8");
-%>
+String sid = (String)session.getAttribute("sUserid");
 
-<jsp:useBean id="member" class="com.member.dto.MemberDTO"></jsp:useBean>
-<jsp:setProperty property="*" name="member"/>
-
-<% 
 MemberDAO dao = MemberDAOImpl.getInstance();
-dao.memberInsert(member);
+dao.memberdelete(sid);
+session.invalidate();
 response.sendRedirect("loginForm.jsp");
 %>

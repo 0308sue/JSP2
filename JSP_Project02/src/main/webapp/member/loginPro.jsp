@@ -4,13 +4,15 @@
     pageEncoding="UTF-8"%>
 <% 
 request.setCharacterEncoding("utf-8");
-%>
+String userid = request.getParameter("userid");
+String pwd = request.getParameter("pwd");
 
-<jsp:useBean id="member" class="com.member.dto.MemberDTO"></jsp:useBean>
-<jsp:setProperty property="*" name="member"/>
-
-<% 
 MemberDAO dao = MemberDAOImpl.getInstance();
-dao.memberInsert(member);
-response.sendRedirect("loginForm.jsp");
+int flag = dao.loginCheck(userid, pwd);
+
+if(flag ==0 || flag ==1){
+	session.setAttribute("sUserid", userid);
+}
+
+out.println(flag);
 %>

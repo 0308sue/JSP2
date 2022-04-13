@@ -72,34 +72,112 @@ public class MemberDAOImpl  implements MemberDAO{
 	//수정
 	@Override
 	public void memberUpdate(MemberDTO dto) {
-		// TODO Auto-generated method stub
-		
+		String sql = "update memberdb set name =?,pwd=?,email=?,phone=?,admin=? where userid=?";
+		try (Connection con =DBConnection.getConnection();
+				PreparedStatement ps = con.prepareStatement(sql)){
+			ps.setString(1, dto.getName());
+			ps.setString(2, dto.getPwd());
+			ps.setString(3, dto.getEmail());
+			ps.setString(4, dto.getPhone());
+			ps.setInt(5, dto.getAdmin());
+			ps.setString(6, dto.getUserid());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
+	//삭제
 	@Override
 	public void memberdelete(String userid) {
-		// TODO Auto-generated method stub
-		
-	}
+		String sql="delete from memberdb where userid ='" +userid+"'";
+		try(Connection con =DBConnection.getConnection();
+			Statement st = con.createStatement();
+			){
+			st.executeQuery(sql);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
+	//상세보기
 	@Override
 	public MemberDTO findByID(String userid) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql="select * from memberdb where userid ='" +userid+"'";
+		MemberDTO member = null;
+		try(Connection con =DBConnection.getConnection();
+			Statement st = con.createStatement();
+				ResultSet rs = st.executeQuery(sql)){
+			if(rs.next()) {
+				member = new MemberDTO();
+				member.setAdmin(rs.getInt("admin"));
+				member.setEmail(rs.getString("email"));
+				member.setName(rs.getString("name"));
+				member.setPhone(rs.getString("phone"));
+				member.setPwd(rs.getString("pwd"));
+				member.setUserid(rs.getString("userid"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return member;
 	}
 
+	//아이디 중복 체크
 	@Override
 	public String idCheck(String userid) {
-		// TODO Auto-generated method stub
-		return null;
+		String flag ="yes";
+		String sql="select * from memberdb where userid ='" +userid+"'";
+		try(Connection con =DBConnection.getConnection();
+			Statement st = con.createStatement();
+				ResultSet rs = st.executeQuery(sql))
+		{if(rs.next()) {
+			flag = "no";
+		}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return flag;
 	}
 
+	//로그인 체크
 	@Override
 	public int loginCheck(String userid, String pwd) {
-		// TODO Auto-generated method stub
-		return 0;
+		int flag =-1;
+		String sql="select pwd,admin from memberdb where userid='" +userid+"'";
+		try(Connection con =DBConnection.getConnection();
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(sql))
+		{if(rs.next()) {
+			if(rs.getString("pwd").equals(pwd)) {
+				flag =rs.getInt("admin");
+			}else {
+				flag =2;
+			}
+		}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return flag;
 	}
 
+	//회원수
 	@Override
 	public int getCount() {
 		String sql = "select count(*) from memberdb";

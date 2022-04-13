@@ -11,6 +11,7 @@ request.setCharacterEncoding("utf-8");
 
 <% 
 MemberDAO dao = MemberDAOImpl.getInstance();
-dao.memberInsert(member);
+dao.memberUpdate(member);
+session.invalidate();
 response.sendRedirect("loginForm.jsp");
 %>
