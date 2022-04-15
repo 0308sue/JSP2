@@ -32,6 +32,7 @@
 	<div class="container mt-5">
 	<div align="right">
 	<%=sid %>님 반갑습니다./<a href="logout.jsp">로그아웃</a>
+	/<a href="/JSP_Project02/board/list.jsp">게시판으로</a>
 	</div>
 		<h2>회원 정보 수정</h2>
 		<form action="memberUpdatePro.jsp" method="post" id="frm">

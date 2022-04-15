@@ -66,7 +66,7 @@
 </head>
 <body>
 <div class="container mt-5">
-<h2>회원가입</h2>
+<h2>로그인</h2>
 		<form action="" >
 			<div class="form-group">
 				<label for="userid">UserID:</label> <input type="text"

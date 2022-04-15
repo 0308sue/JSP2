@@ -7,6 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <%
 request.setCharacterEncoding("utf-8");
@@ -30,7 +31,8 @@ function del() {
 
 </head>
 <body>
-<h2>상세보기</h2>
+<h2>글 내용 보기</h2>
+<input type="hidden" id="num" value="<%=num%>">
 <table border="1">
 	<tr>
 		<th>글번호</th>
@@ -60,5 +62,60 @@ function del() {
 		</td>
 	</tr>
 	</table>
+	<br><br><br><br><br>
+	<div align="center">
+	<textarea rows="5" cols="50" id="msg"></textarea>
+	<input type="button" value="comment Insert" id="commentBtn">
+	</div>
+	Comment(<span id="spanCnt"></span>) <br>
+	<div id="result"></div>
+	<script>
+	var init = function(){
+		$.getJSON("commentList.jsp",{"bnum":$("#num").val()},
+				function(resp){
+					// alert(resp);
+					var str = "<table>"
+					$.each(resp.main,function(key,val){
+						str += "<tr>";
+						str += "<td>"+ val.msg + "</td>"
+						str += "<td>"+ val.userid + "</td>"
+						str += "<td>"+ val.regdate + "</td>"
+						str += "</tr>";
+					})
+					
+					$("#result").html(str);
+					$("#spanCnt").text(resp.count.count);
+			
+		})
+	}
+	
+	$("#commentBtn").on("click",function(){
+		if($("#msg").val()==""){
+			alert("메세지를 입력하세요")
+			return;
+		}
+		$.ajax({
+			type:"get",
+			url:"commentInsertPro.jsp",
+			data:{"msg" : $("#msg").val(),"bnum" : $("#num").val()},
+			success:function(resp){
+				//alert(resp);
+				if(resp.trim()==1){
+					alert("로그인 하세요");
+					location.href="../member/loginForm.jsp";
+				}else{
+				init();
+				$("#msg").val("");	
+				}
+			},
+			error:function(e){
+				alert("error:"+e);
+			}
+		})
+	})
+	
+	init();
+	</script>
+	<br>
 </body>
 </html>

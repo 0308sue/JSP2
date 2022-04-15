@@ -26,7 +26,9 @@ int count = dao.getCount();
 %>
 <div class="container mt-5">
 <div align="right">
-<a href="memberView.jsp" ><%=sid %> 관리자</a>님 반갑습니다./ <a href="logout.jsp">로그아웃</a> 
+<a href="memberView.jsp" ><%=sid %> 관리자</a>님 반갑습니다.
+/ <a href="logout.jsp">로그아웃</a> 
+/<a href="../board/list.jsp">게시판으로</a> 
 </div>
   <h2>회원 리스트(<span id="cntSpan"> <%=count %></span>)</h2>
   <table class="table table-hover">

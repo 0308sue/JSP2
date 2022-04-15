@@ -38,7 +38,7 @@ int count = dao.getCount(field,word);
 </div>
 <h2>전체보기(<%= count %>)</h2>
 <a href="writeForm.jsp">글쓰기</a>
-<table border="1">
+<table >
 	<thead>
 		<tr>
 			<th>번호</th>
@@ -73,6 +73,43 @@ int count = dao.getCount(field,word);
 </select>
 	<input type="text" size="16" name="word">
 	<input type="submit" value="찾기">
+	<div align="center">
+	<%
+		if(count>0){
+			int pageCount =count/pageSize +(count%pageSize == 0?0:1);
+			int pageBlock =3;
+			int startPage =(int)((currentPage-1)/pageBlock)*pageBlock+1;
+			int endPage = startPage+pageBlock-1;
+			if(endPage >pageCount){
+				endPage = pageCount;
+			}
+			if(startPage > pageBlock){
+			%>
+			<a href="list.jsp?pageNum=<%=startPage-pageBlock%>&field=<%=field%>&word=<%=word%>">[이전]</a> 
+			<%
+			}
+			
+			for(int i =startPage; i<=endPage;i++){
+				if(i == currentPage){
+				%>
+					[<%=i%>]
+				<%
+				}else{
+					
+				%>
+				<a href="list.jsp?pageNum=<%=i%>&field=<%=field%>&word=<%=word%>"><%=i%></a> 
+				<%	
+				}
+			}
+			
+			if(endPage < pageCount){
+				%>
+				<a href="list.jsp?pageNum=<%=startPage+pageBlock%>&field=<%=field%>&word=<%=word%>">[다음]</a> 
+				<%
+			}
+		}
+	%>
+	</div>
 </form>
 
 </body>

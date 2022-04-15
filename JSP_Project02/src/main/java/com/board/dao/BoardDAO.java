@@ -7,7 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.xml.stream.events.Comment;
+
 import com.board.dto.BoardDTO;
+import com.board.dto.CommentDTO;
 import com.util.DBConnection;
 
 
@@ -250,6 +253,75 @@ public class BoardDAO {
 			closeConnection(con, null, st, rs);
 		}
 		
+		return count;
+	}
+	
+	public void commentInsert(CommentDTO comment ) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con =DBConnection.getConnection();
+			String sql = "insert into commentboard values(commentboard_seq.nextval,?,?,sysdate,?)";
+			ps=con.prepareStatement(sql);
+			ps.setString(1, comment.getMsg());
+			ps.setString(2, comment.getUserid());
+			ps.setInt(3, comment.getBnum());
+			ps.executeUpdate();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			closeConnection(con,ps,null, null);
+		}
+	}
+	
+	public ArrayList<CommentDTO> commentList(int bnum){
+		Connection con = null;
+		Statement st = null;
+		ResultSet rs = null;
+		ArrayList<CommentDTO> carr = new ArrayList<CommentDTO>();
+		try {
+			con =DBConnection.getConnection();
+			String sql = "select * from commentboard where bnum = "+bnum+"order by cnum desc";
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
+			while(rs.next()) {
+				CommentDTO comment = new CommentDTO();
+				comment.setBnum(rs.getInt("bnum"));
+				comment.setCnum(rs.getInt("cnum"));
+				comment.setMsg(rs.getString("msg"));
+				comment.setRegdate(rs.getString("regdate"));
+				comment.setUserid(rs.getString("userid"));
+				carr.add(comment);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			closeConnection(con,null,st, rs);
+		}
+		
+		return carr;
+	}
+	
+	public int getCountComment(int bnum) {
+		Connection con = null;
+		Statement st = null;
+		ResultSet rs = null;
+		int count = 0;
+		try {
+			con =DBConnection.getConnection();
+			String sql = "select count(*) from commentboard where bnum = "+bnum;
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			closeConnection(con,null,st, rs);
+		}
 		return count;
 	}
 }
